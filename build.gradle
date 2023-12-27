@@ -19,6 +19,7 @@ buildscript {
         dagger = '2.44.2'
         glide = '4.10.0'
         okhttp = '4.10.0'
+        swipe_to_refresh_layout = '1.2.0-alpha01'
     }
 
     repositories {

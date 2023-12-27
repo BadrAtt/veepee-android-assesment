@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vp.list.viewmodel.ListViewModel;
@@ -42,7 +43,10 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorTextView;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
     private String currentQuery = "Interview";
+    private int currentPage = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
+        swipeRefreshLayout = view.findViewById(R.id.swipeToRefreshLayout);
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
@@ -72,12 +77,16 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         initBottomNavigation(view);
         initList();
         listViewModel.observeMovies().observe(getViewLifecycleOwner(), searchResult -> {
+            swipeRefreshLayout.setRefreshing(false);
             if (searchResult != null) {
                 handleResult(listAdapter, searchResult);
             }
         });
-        listViewModel.searchMoviesByTitle(currentQuery, 1);
+        listViewModel.searchMoviesByTitle(currentQuery, currentPage);
         showProgressBar();
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            listViewModel.searchMoviesByTitle(currentQuery, currentPage);
+        });
     }
 
     private void initBottomNavigation(@NonNull View view) {
@@ -164,6 +173,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void loadMoreItems(int page) {
+        currentPage = page;
         gridPagingScrollListener.markLoading(true);
         listViewModel.searchMoviesByTitle(currentQuery, page);
     }
