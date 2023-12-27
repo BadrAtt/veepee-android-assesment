@@ -7,9 +7,10 @@ import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import javax.inject.Inject;
 
-import androidx.appcompat.app.AppCompatActivity;
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
@@ -48,6 +49,7 @@ public class MovieListActivity extends AppCompatActivity implements HasAndroidIn
         searchView = (SearchView) menuItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchView.setIconified(searchViewExpanded);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -74,5 +76,9 @@ public class MovieListActivity extends AppCompatActivity implements HasAndroidIn
     @Override
     public AndroidInjector<Object> androidInjector() {
         return dispatchingActivityInjector;
+    }
+
+    public SearchView getSearchView() {
+        return searchView;
     }
 }

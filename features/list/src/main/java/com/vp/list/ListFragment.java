@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
 
@@ -148,6 +149,17 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(CURRENT_QUERY, currentQuery);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        SearchView searchView = ((MovieListActivity) requireActivity()).getSearchView();
+        if (searchView != null) {
+            if (searchView.isIconified()) {
+                searchView.setQuery(currentQuery, false);
+            }
+        }
     }
 
     @Override
