@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.realm.kotlin'
 
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
@@ -62,6 +61,10 @@ dependencies {
     //api
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit"
+
+    //Realm Database
+    implementation "io.realm.kotlin:library-base:$rootProject.realm"
+    implementation "io.realm.kotlin:library-sync:$rootProject.realm"
 
     //test
     testImplementation 'junit:junit:4.13.2'

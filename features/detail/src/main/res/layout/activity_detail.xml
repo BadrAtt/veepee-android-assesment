@@ -104,7 +104,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:visibility="@{viewModel.state == LoadingState.IN_PROGRESS ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.loadingState == LoadingState.IN_PROGRESS ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +118,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/loading_error"
-            android:visibility="@{viewModel.state == LoadingState.ERROR ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.loadingState == LoadingState.ERROR ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -127,7 +127,7 @@
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.state == LoadingState.LOADED ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.loadingState == LoadingState.LOADED ? View.VISIBLE : View.GONE}"
             app:constraint_referenced_ids="plot, runtime, director, year, title, poster" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

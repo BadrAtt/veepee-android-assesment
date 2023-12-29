@@ -1,10 +1,29 @@
 package com.vp.detail.model
 
 import com.google.gson.annotations.SerializedName
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
 
-data class MovieDetail(@SerializedName("Title") val title: String,
-                       @SerializedName("Year") val year: String,
-                       @SerializedName("Runtime") val runtime: String,
-                       @SerializedName("Director") val director: String,
-                       @SerializedName("Plot") val plot: String,
-                       @SerializedName("Poster") val poster: String)
+open class MovieDetail : RealmObject {
+    @SerializedName("Title")
+    var title: String = ""
+
+    @SerializedName("Year")
+    var year: String = ""
+
+    @SerializedName("Runtime")
+    var runtime: String = ""
+
+    @SerializedName("Director")
+    var director: String = ""
+
+    @SerializedName("Plot")
+    var plot: String = ""
+
+    @SerializedName("Poster")
+    var poster: String = ""
+
+    @PrimaryKey
+    var movieId: String = ""
+
+}

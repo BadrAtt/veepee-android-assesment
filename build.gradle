@@ -20,6 +20,10 @@ buildscript {
         glide = '4.10.0'
         okhttp = '4.10.0'
         swipe_to_refresh_layout = '1.2.0-alpha01'
+        realm = '1.11.0'
+        coroutines = '1.7.3'
+        viewmodel_ktx = '2.6.2'
+        fragment_ktx = '1.6.2'
     }
 
     repositories {
@@ -37,6 +41,10 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+}
+
+plugins {
+    id 'io.realm.kotlin' version "$realm" apply false
 }
 
 allprojects {

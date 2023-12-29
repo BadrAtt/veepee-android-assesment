@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.realm.kotlin'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -14,7 +15,7 @@ android {
 
     }
 
-    buildFeatures{
+    buildFeatures {
         dataBinding {
             enabled = true
         }
@@ -53,6 +54,18 @@ dependencies {
     //architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
 
+    //Realm Database
+    implementation "io.realm.kotlin:library-base:$rootProject.realm"
+    implementation "io.realm.kotlin:library-sync:$rootProject.realm"
+
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
+
+    //Ktx
+    implementation "androidx.fragment:fragment-ktx:$rootProject.fragment_ktx"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewmodel_ktx"
+
+
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
@@ -63,4 +76,9 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
+    testImplementation "org.mockito:mockito-core:4.11.0"
+    testImplementation "com.squareup.retrofit2:retrofit-mock:$rootProject.retrofit"
+    testImplementation "org.assertj:assertj-core:3.24.2"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$rootProject.coroutines"
 }
