@@ -1,4 +1,4 @@
-package com.vp.detail.model
+package com.vp.core_models
 
 import com.google.gson.annotations.SerializedName
 import io.realm.kotlin.types.RealmObject

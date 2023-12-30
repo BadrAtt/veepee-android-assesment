@@ -1,6 +1,6 @@
 package com.vp.detail.repository
 
-import com.vp.detail.model.MovieDetail
+import com.vp.core_models.MovieDetail
 
 interface DetailRepository {
 

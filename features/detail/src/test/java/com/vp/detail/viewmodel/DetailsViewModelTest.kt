@@ -4,8 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.vp.core_models.MovieDetail
 import com.vp.detail.MainDispatcherRule
-import com.vp.detail.model.MovieDetail
 import com.vp.detail.repository.DetailRepository
 import com.vp.detail.service.DetailService
 import kotlinx.coroutines.test.runTest

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vp.detail.model.MovieDetail
+import com.vp.core_models.MovieDetail
 import com.vp.detail.repository.DetailRepository
 import com.vp.detail.service.DetailService
 import kotlinx.coroutines.launch

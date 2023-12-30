@@ -1,4 +1,4 @@
-package com.vp.detail.di
+package com.vp.favorites.di
 
 import com.vp.core_models.MovieDetail
 import dagger.Module
@@ -8,7 +8,7 @@ import io.realm.kotlin.RealmConfiguration
 
 
 @Module
-class DetailDatabaseModule {
+class FavoritesDatabaseModule {
     @Provides
     fun provideRealmConfig(): RealmConfiguration =
         RealmConfiguration.Builder(schema = setOf(MovieDetail::class))

@@ -24,6 +24,8 @@ buildscript {
         coroutines = '1.7.3'
         viewmodel_ktx = '2.6.2'
         fragment_ktx = '1.6.2'
+        navigation = '2.5.3'
+        livedata_ktx = '2.6.2'
     }
 
     repositories {
