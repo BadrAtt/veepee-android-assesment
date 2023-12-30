@@ -87,7 +87,17 @@ class ListFragment : Fragment(), LoadMoreItemsListener, ListAdapter.OnItemClickL
         val gridLayoutManager = GridLayoutManager(
             context,
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3
-        )
+        ).apply {
+            //to have the loader view in the center of grid columns
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (listAdapter.getItemViewType(position)) {
+                        ListAdapter.TYPE_ITEM -> 1
+                        else -> 2
+                    }
+                }
+            }
+        }
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(gridLayoutManager)
         gridPagingScrollListener?.setLoadMoreItemsListener(this)
