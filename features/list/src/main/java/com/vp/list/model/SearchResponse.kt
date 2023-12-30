@@ -1,36 +1,21 @@
-package com.vp.list.model;
+package com.vp.list.model
 
-import androidx.annotation.NonNull;
+import com.google.gson.annotations.SerializedName
 
-import com.google.gson.annotations.SerializedName;
+open class SearchResponse {
 
-import java.util.List;
-
-import static java.util.Collections.emptyList;
-
-public class SearchResponse {
-    private static final String POSITIVE_RESPONSE = "True";
     @SerializedName("Search")
-    private List<ListItem> search;
+    val search: List<ListItem> = arrayListOf()
 
-    private int totalResults;
     @SerializedName("Response")
-    private String response;
+    val response: Boolean = false
 
-    private SearchResponse(String response) {
-        this.response = response;
+    val totalResults = 0
+    fun hasResponse(): Boolean {
+        return POSITIVE_RESPONSE == response
     }
 
-    @NonNull
-    public List<ListItem> getSearch() {
-        return search != null ? search : emptyList();
-    }
-
-    public int getTotalResults() {
-        return totalResults;
-    }
-
-    public boolean hasResponse() {
-        return POSITIVE_RESPONSE.equals(response);
+    companion object {
+        private const val POSITIVE_RESPONSE = true
     }
 }

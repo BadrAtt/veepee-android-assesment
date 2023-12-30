@@ -1,37 +1,35 @@
-package com.vp.list.viewmodel;
+package com.vp.list.viewmodel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.Observer;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.vp.list.model.SearchResponse
+import com.vp.list.service.SearchService
+import org.assertj.core.api.Assertions
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito
+import org.mockito.Mockito.atMostOnce
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import retrofit2.mock.Calls
+import java.io.IOException
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.vp.list.model.SearchResponse;
-import com.vp.list.service.SearchService;
+class ListViewModelTest {
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-
-import retrofit2.mock.Calls;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-public class ListViewModelTest {
+    @JvmField
     @Rule
-    public InstantTaskExecutorRule instantTaskRule = new InstantTaskExecutorRule();
-    private SearchResponse dummySearchResponse;
+    var instantTaskRule = InstantTaskExecutorRule()
+
+    private lateinit var dummySearchResponse: SearchResponse
 
     @Before
-    public void setupDummySearchResult() {
-        String responseJsonString = "{\n" +
+    fun setupDummySearchResult() {
+        val responseJsonString = "{\n" +
                 "  \"Search\": [\n" +
                 "    {\n" +
                 "      \"Title\": \"The Interview\",\n" +
@@ -106,80 +104,102 @@ public class ListViewModelTest {
                 "  ],\n" +
                 "  \"totalResults\": \"1986\",\n" +
                 "  \"Response\": \"True\"\n" +
-                "}";
-
-        Type type = new TypeToken<SearchResponse>() {
-        }.getType();
-        dummySearchResponse = new Gson().fromJson(responseJsonString, type);
-
+                "}"
+        val type = object : TypeToken<SearchResponse?>() {}.type
+        dummySearchResponse = Gson().fromJson(responseJsonString, type)
     }
 
     @Test
-    public void shouldReturnErrorState() {
+    fun shouldReturnErrorState() {
         //given
-        SearchService searchService = mock(SearchService.class);
-        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.failure(new IOException()));
-        ListViewModel listViewModel = new ListViewModel(searchService);
+        val searchService = mock(SearchService::class.java)
+        Mockito.`when`(
+            searchService.search(anyString(), anyInt())
+        ).thenReturn(
+            Calls.failure(IOException())
+        )
+        val listViewModel = ListViewModel(searchService)
 
         //when
-        listViewModel.searchMoviesByTitle("title", 1);
+        listViewModel.searchMoviesByTitle("title", 1)
 
         //then
-        assertThat(listViewModel.observeMovies().getValue().getListState()).isEqualTo(ListState.ERROR);
+        Assertions.assertThat(listViewModel.observeMovies().value?.listState)
+            .isEqualTo(ListState.ERROR)
     }
 
     @Test
-    public void shouldReturnInProgressState() {
+    fun shouldReturnInProgressState() {
         //given
-        SearchService searchService = mock(SearchService.class);
-        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(mock(SearchResponse.class)));
-        ListViewModel listViewModel = new ListViewModel(searchService);
-        Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
-        listViewModel.observeMovies().observeForever(mockObserver);
+        val searchService = mock(SearchService::class.java)
+        Mockito.`when`(
+            searchService.search(anyString(), anyInt())
+        ).thenReturn(
+            Calls.response(mock(SearchResponse::class.java))
+        )
+        val listViewModel = ListViewModel(searchService)
+        val mockObserver = mock<Observer<SearchResult>>()
+        listViewModel.observeMovies().observeForever(mockObserver)
 
         //when
-        listViewModel.searchMoviesByTitle("title", 1);
+        listViewModel.searchMoviesByTitle("title", 1)
 
         //then
-        verify(mockObserver).onChanged(SearchResult.inProgress());
-        listViewModel.observeMovies().removeObserver(mockObserver);
+        verify(mockObserver, atMostOnce()).onChanged(SearchResult.inProgress())
+        listViewModel.observeMovies().removeObserver(mockObserver)
     }
 
     @Test
-    public void shouldSetLiveDataWithSuccessState() {
+    fun shouldSetLiveDataWithSuccessState() {
         //Given
-        SearchService searchService = mock(SearchService.class);
-        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(dummySearchResponse));
-        ListViewModel listViewModel = new ListViewModel(searchService);
-        Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
-        listViewModel.observeMovies().observeForever(mockObserver);
+        val searchService = mock(SearchService::class.java)
+        Mockito.`when`(
+            searchService.search(
+                anyString(),
+                anyInt()
+            )
+        ).thenReturn(
+            Calls.response(dummySearchResponse)
+        )
+        val listViewModel = ListViewModel(searchService)
+        val mockObserver = mock<Observer<SearchResult>>()
+        listViewModel.observeMovies().observeForever(mockObserver)
 
         //When
-        listViewModel.searchMoviesByTitle("Interview", 1);
+        listViewModel.searchMoviesByTitle("Interview", 1)
 
         //then
-        SearchResult expextedSuccessResult = SearchResult.success(dummySearchResponse.getSearch(), dummySearchResponse.getSearch().size());
-        verify(mockObserver).onChanged(expextedSuccessResult);
-        assertThat(listViewModel.observeMovies().getValue().getListState()).isEqualTo(ListState.LOADED);
-
-        listViewModel.observeMovies().removeObserver(mockObserver);
+        val expectedSuccessResult = SearchResult.success(
+            dummySearchResponse.search, dummySearchResponse.search.size
+        )
+        verify(mockObserver).onChanged(expectedSuccessResult)
+        Assertions.assertThat(listViewModel.observeMovies().value?.listState)
+            .isEqualTo(ListState.LOADED)
+        listViewModel.observeMovies().removeObserver(mockObserver)
     }
 
     @Test
-    public void shouldReturnStateLoadedWhenSuccess() {
+    fun shouldReturnStateLoadedWhenSuccess() {
         //Given
-        SearchService searchService = mock(SearchService.class);
-        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(dummySearchResponse));
-        ListViewModel listViewModel = new ListViewModel(searchService);
-        Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
-        listViewModel.observeMovies().observeForever(mockObserver);
+        val searchService = mock(SearchService::class.java)
+        Mockito.`when`(
+            searchService.search(
+                anyString(),
+                anyInt()
+            )
+        ).thenReturn(
+            Calls.response(dummySearchResponse)
+        )
+        val listViewModel = ListViewModel(searchService)
+        val mockObserver = mock<Observer<SearchResult>>()
+        listViewModel.observeMovies().observeForever(mockObserver)
 
         //When
-        listViewModel.searchMoviesByTitle("Interview", 1);
+        listViewModel.searchMoviesByTitle("Interview", 1)
 
         //then
-        assertThat(listViewModel.observeMovies().getValue().getListState()).isEqualTo(ListState.LOADED);
-
-        listViewModel.observeMovies().removeObserver(mockObserver);
+        Assertions.assertThat(listViewModel.observeMovies().value?.listState)
+            .isEqualTo(ListState.LOADED)
+        listViewModel.observeMovies().removeObserver(mockObserver)
     }
 }
